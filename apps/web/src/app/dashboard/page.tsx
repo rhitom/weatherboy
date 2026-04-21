@@ -1,34 +1,16 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import GradientBackground from "@/components/dashboard/GradientBackground";
-import DashboardRealtimeRefresh from "@/components/dashboard/DashboardRealtimeRefresh";
 import HomeBaseCard from "@/components/dashboard/HomeBaseCard";
 import FavoriteCityWidget from "@/components/dashboard/FavoriteCityWidget";
 import SetupNotice from "@/components/ui/SetupNotice";
-import { getDashboardData } from "@/lib/dashboard-data";
-import { getViewerState } from "@/lib/viewer";
-import { hasClerkConfig } from "@/lib/env";
+import { prototypeDashboardData } from "@/lib/dashboard-data";
 
-export default async function DashboardPage() {
-  const viewer = await getViewerState();
-
-  if (hasClerkConfig() && !viewer.userId) {
-    redirect("/sign-in");
-  }
-
-  if (viewer.userId && !viewer.onboardingComplete) {
-    redirect("/onboarding");
-  }
-
-  const dashboard = await getDashboardData(viewer.userId);
+export default function DashboardPage() {
+  const dashboard = prototypeDashboardData;
 
   return (
     <GradientBackground>
       <main className="mx-auto max-w-[1400px] px-4 py-8 md:px-8">
-        <DashboardRealtimeRefresh
-          enabled={dashboard.usingLiveData && Boolean(viewer.userId)}
-          zodiacSign={dashboard.homeBase.showAstrology ? dashboard.homeBase.zodiacSign : null}
-        />
         <div className="mb-8 flex items-center justify-between">
           <h2 className="font-serif text-2xl italic lowercase">weatherboy</h2>
           <div className="flex items-center gap-4">
@@ -36,18 +18,16 @@ export default async function DashboardPage() {
               settings
             </Link>
             <div className="flex h-8 w-8 items-center justify-center rounded-full border border-white/60 bg-white/50 text-sm">
-              {(viewer.firstName?.[0] ?? "w").toUpperCase()}
+              W
             </div>
           </div>
         </div>
 
         <div className="mb-6">
           <SetupNotice />
-          {!dashboard.usingLiveData ? (
-            <p className="mt-3 text-sm lowercase text-muted">
-              dashboard is using the prototype view until Supabase has live rows for this user.
-            </p>
-          ) : null}
+          <p className="mt-3 text-sm lowercase text-muted">
+            dashboard is temporarily pinned to the prototype view while the live data path is being stabilized.
+          </p>
         </div>
 
         <div className="flex flex-col gap-6 lg:flex-row">

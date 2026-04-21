@@ -91,6 +91,8 @@ __turbopack_context__.s([
     ()=>env,
     "hasClerkConfig",
     ()=>hasClerkConfig,
+    "hasClerkPublicConfig",
+    ()=>hasClerkPublicConfig,
     "hasSupabaseAdminConfig",
     ()=>hasSupabaseAdminConfig,
     "hasSupabasePublicConfig",
@@ -105,6 +107,9 @@ const env = {
     supabaseAnonKey: ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqbGt6dWxqcmlrYWhrbHFsdGdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MjYwMDIsImV4cCI6MjA5MjMwMjAwMn0.pXZFNIsPZsyM5W4b457kj_9UzM_nxIaI_s9skeeFBwg"),
     supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY
 };
+function hasClerkPublicConfig() {
+    return Boolean(env.clerkPublishableKey);
+}
 function hasClerkConfig() {
     return Boolean(env.clerkPublishableKey && env.clerkSecretKey);
 }
@@ -116,7 +121,10 @@ function hasSupabaseAdminConfig() {
 }
 function missingSetupItems() {
     const missing = [];
-    if (!hasClerkConfig()) {
+    if (!hasClerkPublicConfig()) {
+        missing.push("Clerk publishable key");
+    }
+    if (!env.clerkSecretKey) {
         missing.push("Clerk keys");
     }
     if (!hasSupabasePublicConfig()) {

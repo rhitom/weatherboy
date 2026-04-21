@@ -68,7 +68,7 @@ export async function persistUserPreferences(
       ? getZodiacSignFromBirthday(submission.birthday)
       : null;
 
-  await supabase.from("user_preferences").upsert(
+  const preferencesResult = await supabase.from("user_preferences").upsert(
     {
       clerk_user_id: userId,
       home_city_id: homeCityId,
@@ -84,15 +84,30 @@ export async function persistUserPreferences(
     { onConflict: "clerk_user_id" },
   );
 
-  await supabase.from("user_favorite_cities").delete().eq("clerk_user_id", userId);
+  if (preferencesResult.error) {
+    throw new Error(`Could not save your preferences. ${preferencesResult.error.message}`);
+  }
+
+  const deleteFavoritesResult = await supabase
+    .from("user_favorite_cities")
+    .delete()
+    .eq("clerk_user_id", userId);
+
+  if (deleteFavoritesResult.error) {
+    throw new Error(`Could not update your favorite cities. ${deleteFavoritesResult.error.message}`);
+  }
 
   if (favoriteCityIds.length > 0) {
-    await supabase.from("user_favorite_cities").insert(
+    const insertFavoritesResult = await supabase.from("user_favorite_cities").insert(
       favoriteCityIds.map((cityId, index) => ({
         clerk_user_id: userId,
         city_id: cityId,
         position: index + 1,
       })),
     );
+
+    if (insertFavoritesResult.error) {
+      throw new Error(`Could not save your favorite cities. ${insertFavoritesResult.error.message}`);
+    }
   }
 }

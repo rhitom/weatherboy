@@ -6,6 +6,10 @@ export const env = {
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
 };
 
+export function hasClerkPublicConfig() {
+  return Boolean(env.clerkPublishableKey);
+}
+
 export function hasClerkConfig() {
   return Boolean(env.clerkPublishableKey && env.clerkSecretKey);
 }
@@ -21,7 +25,11 @@ export function hasSupabaseAdminConfig() {
 export function missingSetupItems() {
   const missing: string[] = [];
 
-  if (!hasClerkConfig()) {
+  if (!hasClerkPublicConfig()) {
+    missing.push("Clerk publishable key");
+  }
+
+  if (!env.clerkSecretKey) {
     missing.push("Clerk keys");
   }
 

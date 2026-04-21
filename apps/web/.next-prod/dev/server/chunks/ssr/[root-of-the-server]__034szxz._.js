@@ -49,6 +49,8 @@ __turbopack_context__.s([
     ()=>env,
     "hasClerkConfig",
     ()=>hasClerkConfig,
+    "hasClerkPublicConfig",
+    ()=>hasClerkPublicConfig,
     "hasSupabaseAdminConfig",
     ()=>hasSupabaseAdminConfig,
     "hasSupabasePublicConfig",
@@ -63,6 +65,9 @@ const env = {
     supabaseAnonKey: ("TURBOPACK compile-time value", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxqbGt6dWxqcmlrYWhrbHFsdGdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MjYwMDIsImV4cCI6MjA5MjMwMjAwMn0.pXZFNIsPZsyM5W4b457kj_9UzM_nxIaI_s9skeeFBwg"),
     supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY
 };
+function hasClerkPublicConfig() {
+    return Boolean(env.clerkPublishableKey);
+}
 function hasClerkConfig() {
     return Boolean(env.clerkPublishableKey && env.clerkSecretKey);
 }
@@ -74,7 +79,10 @@ function hasSupabaseAdminConfig() {
 }
 function missingSetupItems() {
     const missing = [];
-    if (!hasClerkConfig()) {
+    if (!hasClerkPublicConfig()) {
+        missing.push("Clerk publishable key");
+    }
+    if (!env.clerkSecretKey) {
         missing.push("Clerk keys");
     }
     if (!hasSupabasePublicConfig()) {
@@ -101,10 +109,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$apps$2f$web$2f$src$2f$lib$2f
 ;
 ;
 function RootProviders({ children }) {
-    if (!(0, __TURBOPACK__imported__module__$5b$project$5d2f$apps$2f$web$2f$src$2f$lib$2f$env$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["hasClerkConfig"])()) {
+    if (!(0, __TURBOPACK__imported__module__$5b$project$5d2f$apps$2f$web$2f$src$2f$lib$2f$env$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["hasClerkPublicConfig"])()) {
         return children;
     }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$clerk$2f$nextjs$2f$dist$2f$esm$2f$index$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$locals$3e$__["ClerkProvider"], {
+        publishableKey: __TURBOPACK__imported__module__$5b$project$5d2f$apps$2f$web$2f$src$2f$lib$2f$env$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["env"].clerkPublishableKey,
         children: children
     }, void 0, false, {
         fileName: "[project]/apps/web/src/components/providers/RootProviders.tsx",

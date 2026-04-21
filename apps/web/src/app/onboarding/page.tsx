@@ -1,21 +1,8 @@
-import { redirect } from "next/navigation";
 import GradientBackground from "@/components/dashboard/GradientBackground";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import SetupNotice from "@/components/ui/SetupNotice";
-import { getViewerState } from "@/lib/viewer";
-import { hasClerkConfig } from "@/lib/env";
 
-export default async function OnboardingPage() {
-  const viewer = await getViewerState();
-
-  if (hasClerkConfig() && !viewer.userId) {
-    redirect("/sign-in");
-  }
-
-  if (viewer.userId && viewer.onboardingComplete) {
-    redirect("/dashboard");
-  }
-
+export default function OnboardingPage() {
   return (
     <GradientBackground>
       <main className="mx-auto min-h-screen max-w-7xl px-4 py-8 md:px-8">

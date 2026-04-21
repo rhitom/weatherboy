@@ -6,33 +6,28 @@ A personalized weather dashboard for MPCS databases course. The system uses a ba
 
 - Prototype dashboard exists in `apps/web` with hardcoded data and the intended visual language.
 - Full-stack implementation is now in progress and the main app shell is built.
-- Current implementation focus: local end-to-end verification, deployment prep, and hosted setup.
+- Landing page, auth pages, and most of onboarding are rendering correctly from the local production server.
+- Current implementation focus: fix the remaining onboarding step 5 failure, fix the dashboard load, populate live data, and deploy before the class deadline.
 - Active working copy lives outside OneDrive to avoid Windows file-lock issues during builds.
 - Current source of truth: `C:\Users\rhito\weatherboy-local-20260420-223208`.
 - OneDrive copy should not be used for local auth/runtime testing because it does not carry the working local env files.
+- Current local time constraint: finish core functionality and deployment by `3:30 PM` today.
 
 ## TODOs
 
-- [ ] Moon phase spiritual blurbs: write 8 short blurbs, one for each major moon phase.
-- [ ] Weekly synopsis friendly-tone templates: finish the deterministic template library for the forecast summary.
-- [ ] Guest preview decision: revisit whether the landing page should offer a non-authenticated guest preview after the core flow is complete.
-- [ ] Verify the live Clerk sign-up/sign-in flow in the local copy after starting the web app from `C:\Users\rhito\weatherboy-local-20260420-223208`.
-- [ ] Test onboarding against the live Supabase project and confirm `cities`, `user_preferences`, and `user_favorite_cities` populate correctly.
-- [ ] Run the worker manually with live credentials and verify writes into `weather_current`, `weather_forecast`, `air_quality`, `astronomy`, and `horoscopes`.
-- [ ] Decide whether to keep pollen deferred for the class submission or return to Google Pollen setup after the core path is verified.
-- [ ] If pollen is restored, add `GOOGLE_POLLEN_API_KEY` and verify writes into `pollen`.
+- [ ] Fix the onboarding step 5 astrology failure so the final step renders and submits reliably.
+- [ ] Fix the `/dashboard` load path after onboarding so the authenticated user reaches the dashboard instead of an error or redirect loop.
+- [ ] Confirm that onboarding writes rows into `cities`, `user_preferences`, and `user_favorite_cities`.
+- [ ] Run the worker manually and verify writes into `weather_current`, `weather_forecast`, `air_quality`, `astronomy`, and `horoscopes`.
 - [ ] Verify the dashboard switches from prototype fallback to real Supabase-backed data for an onboarded user.
 - [ ] Verify Realtime refresh works when weather-facing tables change.
-- [ ] Finish settings polish and confirm edits round-trip into Supabase and back onto the dashboard.
-- [ ] Add deterministic synopsis text and moon-phase blurbs to the live dashboard path.
-- [ ] Confirm Supabase Realtime is enabled on all required tables in the hosted project.
-- [ ] Configure Railway cron for the worker's daily run.
 - [ ] Deploy the web app to Vercel.
 - [ ] Deploy the worker to Railway.
 - [ ] Add hosted environment variables in Vercel and Railway dashboards.
-- [ ] Configure the Supabase MCP server for the assignment requirement.
+- [ ] Configure Railway cron for the worker's daily run.
 - [ ] Make multiple git commits that show implementation progress from scaffold to live integration.
-- [ ] Run the full end-to-end checklist with a real account and at least one classmate test.
+- [ ] Run one final end-to-end signup and onboarding test on the deployed app.
+- [ ] If time remains after deployment, return to settings polish, synopsis copy, moon blurbs, and pollen.
 
 ## Locked Decisions
 
@@ -78,6 +73,59 @@ A personalized weather dashboard for MPCS databases course. The system uses a ba
 - [x] Supabase Realtime dashboard refresh layer added
 - [x] Local web lint and production builds verified after the settings and Realtime work
 - [x] Root cause of the broken local sign-up test identified: app was being opened from the stale OneDrive copy instead of the working local repo
+- [x] Root cause of the broken Clerk client render identified and partially fixed by separating public Clerk config from server-only Clerk config
+- [x] Local web auth flow verified to the point that sign-up and sign-in render and function from the local production server
+- [x] Onboarding flow verified through the early steps with real Clerk auth
+- [x] Web env fixed to include `SUPABASE_SERVICE_ROLE_KEY`, which was previously missing and blocking server-side onboarding and dashboard reads
+- [x] Preference persistence hardened so Supabase write failures now throw explicit errors instead of failing silently
+
+## Concrete Deliverables
+
+- `Monorepo scaffold`: root workspace plus `apps/web`, `apps/worker`, and `packages/shared`
+- `Frontend shell`: landing page, sign-in page, sign-up page, onboarding route, dashboard route, settings route
+- `Branding`: pixel cloud / moon / north star mark plus app icon route and the agreed landing-page palette/headline
+- `Onboarding UI`: home city search, favorite cities, temperature preference, visible data points, units, astrology opt-in, birthday capture
+- `Auth integration`: Clerk provider, Clerk middleware/proxy, protected route handling, live local Clerk keys
+- `Database contract`: Supabase project created, schema pushed, RLS policies added, Realtime tables configured in SQL
+- `Server data layer`: Supabase admin helpers, viewer state lookup, onboarding/settings persistence path, dashboard/settings data readers
+- `Dashboard integration`: prototype fallback plus live Supabase-backed read path, optional-card hiding, preference-aware data visibility, Realtime refresh component
+- `Worker scaffold`: API clients and sync structure for Open-Meteo weather, Open-Meteo AQI, WeatherAPI astronomy, Google Pollen placeholder, and Aztro horoscopes
+- `Environment setup`: local web and worker env files populated for Clerk, Supabase, and WeatherAPI
+- `Verification`: local worker build passes, local web lint passes, local web production build passes
+
+## Current Blockers
+
+- `Onboarding step 5`: the astrology/final step is still failing to render or submit reliably in the browser
+- `Dashboard`: authenticated users are not yet reaching a stable dashboard after onboarding
+- `Supabase writes`: a direct service-role check showed `user_preferences` and `user_favorite_cities` still empty, so onboarding has not yet completed a successful real write
+- `Deployment`: Vercel and Railway deployment plus hosted env setup still need to happen
+
+## Finish By 3:30 PM
+
+### 12:40 PM to 1:20 PM
+1. Fix the onboarding step 5 client failure.
+2. Re-run onboarding until `user_preferences` and `user_favorite_cities` contain real rows.
+3. Keep all debugging focused on the local production server, not `next dev`.
+
+### 1:20 PM to 2:00 PM
+1. Fix the `/dashboard` load path so the onboarded user reaches the dashboard.
+2. Confirm the dashboard can render from real Supabase data or at minimum from a valid saved preference record plus fallback data.
+3. Verify one complete local signup -> onboarding -> dashboard path.
+
+### 2:00 PM to 2:30 PM
+1. Run the worker manually with the live keys already in place.
+2. Confirm writes into weather, forecast, air quality, astronomy, and horoscope tables.
+3. Refresh the dashboard and verify it reads live rows instead of only prototype fallback.
+
+### 2:30 PM to 3:00 PM
+1. Deploy `apps/web` to Vercel.
+2. Deploy `apps/worker` to Railway.
+3. Add hosted env vars and configure the daily Railway cron.
+
+### 3:00 PM to 3:30 PM
+1. Run one full deployed signup/onboarding/dashboard check.
+2. Make the required git commits if they are still missing.
+3. Only use remaining time for polish: settings cleanup, realtime verification, synopsis/moon text, pollen.
 
 ## Remaining Implementation Plan
 
@@ -135,18 +183,18 @@ A personalized weather dashboard for MPCS databases course. The system uses a ba
 - Supabase URL, anon key, and service-role key are already present in the local env files.
 - `WEATHERAPI_KEY` is already present and verified in `apps/worker/.env.local`.
 - `GOOGLE_POLLEN_API_KEY` is intentionally still blank for now.
+- Local browser testing is currently most stable against the local production server on `http://localhost:3000`.
 - This local copy now passes:
   - `npm run build --workspace @weatherboy/worker`
   - `npm run lint --workspace @weatherboy/web`
   - `npm run build --workspace @weatherboy/web`
 - For local testing, start the app from this folder only:
   - `cd C:\Users\rhito\weatherboy-local-20260420-223208`
-  - `npm run dev --workspace @weatherboy/web`
-- The biggest remaining work is no longer app scaffolding. It is end-to-end integration and deployment:
-  - live auth/onboarding verification
-  - worker-to-Supabase verification
-  - realtime verification
-  - deployment
+  - `npm run start --workspace @weatherboy/web`
+- Immediate next debugging targets:
+  - onboarding step 5 astrology failure
+  - empty `user_preferences` / `user_favorite_cities` tables after onboarding attempts
+  - dashboard load after successful onboarding
 
 ## Architecture
 

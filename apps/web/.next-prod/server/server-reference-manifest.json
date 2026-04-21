@@ -15,7 +15,7 @@
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
         },
         "app/onboarding/page": {
-          "moduleId": 8150,
+          "moduleId": 26287,
           "async": false,
           "exportedName": "detectKeylessEnvDriftAction",
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
@@ -63,7 +63,7 @@
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js"
         },
         "app/onboarding/page": {
-          "moduleId": 8150,
+          "moduleId": 26287,
           "async": false,
           "exportedName": "invalidateCacheAction",
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js"
@@ -111,7 +111,7 @@
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
         },
         "app/onboarding/page": {
-          "moduleId": 8150,
+          "moduleId": 26287,
           "async": false,
           "exportedName": "createOrReadKeylessAction",
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
@@ -143,30 +143,6 @@
       },
       "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js",
       "exportedName": "createOrReadKeylessAction"
-    },
-    "7f887eca51e4fd11169b10f929d64ae72f8df06484": {
-      "workers": {
-        "app/onboarding/page": {
-          "moduleId": 8150,
-          "async": false,
-          "exportedName": "initialOnboardingState",
-          "filename": "apps/web/src/app/onboarding/actions.ts"
-        }
-      },
-      "filename": "apps/web/src/app/onboarding/actions.ts",
-      "exportedName": "initialOnboardingState"
-    },
-    "60859d0be49916a718c086a11823be23d3372531bb": {
-      "workers": {
-        "app/onboarding/page": {
-          "moduleId": 8150,
-          "async": false,
-          "exportedName": "submitOnboarding",
-          "filename": "apps/web/src/app/onboarding/actions.ts"
-        }
-      },
-      "filename": "apps/web/src/app/onboarding/actions.ts",
-      "exportedName": "submitOnboarding"
     },
     "7f1e87084083f4ed66c09944d77b804982c7d5df55": {
       "workers": {
