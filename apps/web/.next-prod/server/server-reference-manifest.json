@@ -27,7 +27,7 @@
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
         },
         "app/settings/page": {
-          "moduleId": 41945,
+          "moduleId": 55439,
           "async": false,
           "exportedName": "detectKeylessEnvDriftAction",
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
@@ -75,7 +75,7 @@
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js"
         },
         "app/settings/page": {
-          "moduleId": 41945,
+          "moduleId": 55439,
           "async": false,
           "exportedName": "invalidateCacheAction",
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js"
@@ -123,7 +123,7 @@
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
         },
         "app/settings/page": {
-          "moduleId": 41945,
+          "moduleId": 55439,
           "async": false,
           "exportedName": "createOrReadKeylessAction",
           "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
@@ -143,30 +143,6 @@
       },
       "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js",
       "exportedName": "createOrReadKeylessAction"
-    },
-    "7f1e87084083f4ed66c09944d77b804982c7d5df55": {
-      "workers": {
-        "app/settings/page": {
-          "moduleId": 41945,
-          "async": false,
-          "exportedName": "initialSettingsState",
-          "filename": "apps/web/src/app/settings/actions.ts"
-        }
-      },
-      "filename": "apps/web/src/app/settings/actions.ts",
-      "exportedName": "initialSettingsState"
-    },
-    "60cf7b95ce42f5bd407d5bc14f08308c7ff8b55f07": {
-      "workers": {
-        "app/settings/page": {
-          "moduleId": 41945,
-          "async": false,
-          "exportedName": "saveSettings",
-          "filename": "apps/web/src/app/settings/actions.ts"
-        }
-      },
-      "filename": "apps/web/src/app/settings/actions.ts",
-      "exportedName": "saveSettings"
     }
   },
   "edge": {},

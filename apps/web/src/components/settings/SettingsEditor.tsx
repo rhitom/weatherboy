@@ -1,9 +1,9 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { OnboardingSubmission, TemperaturePreference, WeatherDataPoint } from "@weatherboy/shared";
 import CitySearch from "@/components/ui/CitySearch";
-import { initialSettingsState, saveSettings } from "@/app/settings/actions";
 
 const dataPointOptions: { id: WeatherDataPoint; label: string }[] = [
   { id: "humidity", label: "humidity" },
@@ -23,7 +23,7 @@ export default function SettingsEditor({
 }: {
   initialValue: OnboardingSubmission;
 }) {
-  const [state, formAction, isPending] = useActionState(saveSettings, initialSettingsState);
+  const router = useRouter();
   const [homeCity, setHomeCity] = useState(initialValue.homeCity);
   const [favoriteCities, setFavoriteCities] = useState(initialValue.favoriteCities);
   const [runsHotOrCold, setRunsHotOrCold] = useState<TemperaturePreference>(initialValue.runsHotOrCold);
@@ -32,22 +32,60 @@ export default function SettingsEditor({
   const [unitsWind, setUnitsWind] = useState<"mph" | "kmh">(initialValue.unitsWind);
   const [astrologyEnabled, setAstrologyEnabled] = useState(initialValue.astrologyEnabled);
   const [birthday, setBirthday] = useState(initialValue.birthday ?? "");
+  const [isPending, setIsPending] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState<"error" | "success" | "idle">("idle");
 
-  const payload: OnboardingSubmission = {
-    homeCity,
-    favoriteCities,
-    runsHotOrCold,
-    selectedDataPoints,
-    unitsTemp,
-    unitsWind,
-    astrologyEnabled,
-    birthday: astrologyEnabled && birthday ? birthday : null,
-  };
+  async function handleSave() {
+    if (!homeCity || selectedDataPoints.length === 0 || (astrologyEnabled && !birthday) || isPending) {
+      return;
+    }
+
+    const payload: OnboardingSubmission = {
+      homeCity,
+      favoriteCities,
+      runsHotOrCold,
+      selectedDataPoints,
+      unitsTemp,
+      unitsWind,
+      astrologyEnabled,
+      birthday: astrologyEnabled && birthday ? birthday : null,
+    };
+
+    setIsPending(true);
+    setMessage("");
+    setMessageType("idle");
+
+    try {
+      const response = await fetch("/api/settings", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = (await response.json()) as { ok: boolean; message: string };
+
+      if (!response.ok || !result.ok) {
+        setMessage(result.message || "Something went wrong while saving settings.");
+        setMessageType("error");
+        return;
+      }
+
+      setMessage(result.message || "Settings saved.");
+      setMessageType("success");
+      router.refresh();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Something went wrong while saving settings.");
+      setMessageType("error");
+    } finally {
+      setIsPending(false);
+    }
+  }
 
   return (
-    <form action={formAction} className="space-y-4">
-      <input name="payload" type="hidden" value={JSON.stringify(payload)} />
-
+    <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-[1.25rem] border border-white/80 bg-white/45 p-4">
           <CitySearch
@@ -207,9 +245,9 @@ export default function SettingsEditor({
         </div>
       </div>
 
-      {state.message ? (
-        <p className={`text-sm lowercase ${state.status === "error" ? "text-rose-700" : "text-emerald-700"}`}>
-          {state.message}
+      {message ? (
+        <p className={`text-sm lowercase ${messageType === "error" ? "text-rose-700" : "text-emerald-700"}`}>
+          {message}
         </p>
       ) : null}
 
@@ -217,11 +255,12 @@ export default function SettingsEditor({
         <button
           className="rounded-full bg-white/90 px-5 py-3 text-sm lowercase shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
           disabled={!homeCity || selectedDataPoints.length === 0 || (astrologyEnabled && !birthday) || isPending}
-          type="submit"
+          type="button"
+          onClick={handleSave}
         >
           {isPending ? "saving..." : "save settings"}
         </button>
       </div>
-    </form>
+    </div>
   );
 }

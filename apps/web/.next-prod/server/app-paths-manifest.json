@@ -3,6 +3,7 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/api/geocode/route": "app/api/geocode/route.js",
   "/api/onboarding/route": "app/api/onboarding/route.js",
+  "/api/settings/route": "app/api/settings/route.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/icon/route": "app/icon/route.js",
