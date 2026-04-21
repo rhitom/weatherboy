@@ -1,16 +1,35 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import GradientBackground from "@/components/dashboard/GradientBackground";
+import DashboardRealtimeRefresh from "@/components/dashboard/DashboardRealtimeRefresh";
 import HomeBaseCard from "@/components/dashboard/HomeBaseCard";
 import FavoriteCityWidget from "@/components/dashboard/FavoriteCityWidget";
 import SetupNotice from "@/components/ui/SetupNotice";
-import { prototypeDashboardData } from "@/lib/dashboard-data";
+import { getDashboardData } from "@/lib/dashboard-data";
+import { getViewerState } from "@/lib/viewer";
+import { hasClerkConfig } from "@/lib/env";
 
-export default function DashboardPage() {
-  const dashboard = prototypeDashboardData;
+export default async function DashboardPage() {
+  const viewer = await getViewerState();
+
+  if (hasClerkConfig() && !viewer.userId) {
+    redirect("/sign-in");
+  }
+
+  if (hasClerkConfig() && viewer.userId && !viewer.onboardingComplete) {
+    redirect("/onboarding");
+  }
+
+  const dashboard = await getDashboardData(viewer.userId);
 
   return (
     <GradientBackground>
       <main className="mx-auto max-w-[1400px] px-4 py-8 md:px-8">
+        <DashboardRealtimeRefresh
+          enabled={dashboard.usingLiveData}
+          zodiacSign={dashboard.homeBase.showAstrology ? dashboard.homeBase.zodiacSign : null}
+        />
+
         <div className="mb-8 flex items-center justify-between">
           <h2 className="font-serif text-2xl italic lowercase">weatherboy</h2>
           <div className="flex items-center gap-4">
@@ -25,9 +44,11 @@ export default function DashboardPage() {
 
         <div className="mb-6">
           <SetupNotice />
-          <p className="mt-3 text-sm lowercase text-muted">
-            dashboard is temporarily pinned to the prototype view while the live data path is being stabilized.
-          </p>
+          {!dashboard.usingLiveData ? (
+            <p className="mt-3 text-sm lowercase text-muted">
+              your saved cities are live now. weather cards will fill in as soon as the worker writes forecast data.
+            </p>
+          ) : null}
         </div>
 
         <div className="flex flex-col gap-6 lg:flex-row">
