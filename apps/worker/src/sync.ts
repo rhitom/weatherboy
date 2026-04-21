@@ -17,10 +17,45 @@ interface ActiveSignRow {
 
 async function fetchActiveCities() {
   const supabase = createWorkerSupabaseClient();
+  const [homeCityResult, favoriteCityResult] = await Promise.all([
+    supabase
+      .from("user_preferences")
+      .select("home_city_id")
+      .eq("onboarding_complete", true)
+      .not("home_city_id", "is", null),
+    supabase.from("user_favorite_cities").select("city_id"),
+  ]);
+
+  if (homeCityResult.error) {
+    throw new Error(`Could not fetch active home cities: ${homeCityResult.error.message}`);
+  }
+
+  if (favoriteCityResult.error) {
+    throw new Error(`Could not fetch active favorite cities: ${favoriteCityResult.error.message}`);
+  }
+
+  const cityIds = new Set<string>();
+
+  for (const row of homeCityResult.data ?? []) {
+    if (row.home_city_id) {
+      cityIds.add(String(row.home_city_id));
+    }
+  }
+
+  for (const row of favoriteCityResult.data ?? []) {
+    if (row.city_id) {
+      cityIds.add(String(row.city_id));
+    }
+  }
+
+  if (cityIds.size === 0) {
+    return [];
+  }
+
   const { data, error } = await supabase
     .from("cities")
     .select("id, latitude, longitude")
-    .or("id.in.(select home_city_id from user_preferences where onboarding_complete = true),id.in.(select city_id from user_favorite_cities)");
+    .in("id", [...cityIds]);
 
   if (error) {
     throw new Error(`Could not fetch active cities: ${error.message}`);
