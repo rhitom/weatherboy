@@ -1,0 +1,13 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/geocode/route": "/api/geocode",
+  "/dashboard/page": "/dashboard",
+  "/favicon.ico/route": "/favicon.ico",
+  "/icon/route": "/icon",
+  "/onboarding/page": "/onboarding",
+  "/page": "/",
+  "/settings/page": "/settings",
+  "/sign-in/[[...sign-in]]/page": "/sign-in/[[...sign-in]]",
+  "/sign-up/[[...sign-up]]/page": "/sign-up/[[...sign-up]]"
+}

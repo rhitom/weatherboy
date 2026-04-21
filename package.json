@@ -1,0 +1,20 @@
+{
+  "name": "weatherboy",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace @weatherboy/web",
+    "build:web": "npm run build --workspace @weatherboy/web",
+    "lint:web": "npm run lint --workspace @weatherboy/web",
+    "dev:worker": "npm run dev --workspace @weatherboy/worker",
+    "build:worker": "npm run build --workspace @weatherboy/worker",
+    "start:worker": "npm run start --workspace @weatherboy/worker"
+  },
+  "devDependencies": {
+    "supabase": "^2.93.0"
+  }
+}

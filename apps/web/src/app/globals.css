@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  --color-background: #f8f8ff;
+  --color-foreground: #1a1a2e;
+  --color-muted: #4b5060;
+  --color-card: rgba(248, 248, 255, 0.88);
+  --color-card-border: rgba(255, 255, 255, 0.92);
+  --color-accent-warm: #a891c4;
+  --color-accent-cool: #3b82f6;
+  --color-accent-pink: #ffe7ff;
+  --color-accent-lavender: #dee2ff;
+  --color-temp-hot: #ef4444;
+  --color-temp-warm: #f59e0b;
+  --color-temp-comfortable: #6b9a7d;
+  --color-temp-cool: #7889a8;
+  --color-temp-cold: #5c6b8a;
+}
+
+body {
+  color: var(--color-foreground);
+  background: #f8f8ff;
+}
+
+.glass-card {
+  background: rgba(248, 248, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 255, 255, 0.94);
+  border-radius: 1.5rem;
+  box-shadow: 0 18px 60px rgba(110, 118, 168, 0.12);
+  color: #1a1a2e;
+}

@@ -1,0 +1,65 @@
+{
+  "node": {
+    "00aa6d337091c0325cf841c6e27cf8ef5f2c656005": {
+      "workers": {
+        "app/onboarding/page": {
+          "moduleId": 8150,
+          "async": false,
+          "exportedName": "detectKeylessEnvDriftAction",
+          "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
+        }
+      },
+      "exportedName": "detectKeylessEnvDriftAction",
+      "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
+    },
+    "004a807dd4fa4646422d027396f86164f5738996c1": {
+      "workers": {
+        "app/onboarding/page": {
+          "moduleId": 8150,
+          "async": false,
+          "exportedName": "invalidateCacheAction",
+          "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js"
+        }
+      },
+      "exportedName": "invalidateCacheAction",
+      "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/server-actions.js"
+    },
+    "00e3bb6beab565f4df6491c25a627797528998c54e": {
+      "workers": {
+        "app/onboarding/page": {
+          "moduleId": 8150,
+          "async": false,
+          "exportedName": "createOrReadKeylessAction",
+          "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
+        }
+      },
+      "exportedName": "createOrReadKeylessAction",
+      "filename": "node_modules/@clerk/nextjs/dist/esm/app-router/keyless-actions.js"
+    },
+    "7f887eca51e4fd11169b10f929d64ae72f8df06484": {
+      "workers": {
+        "app/onboarding/page": {
+          "moduleId": 8150,
+          "async": false,
+          "exportedName": "initialOnboardingState",
+          "filename": "apps/web/src/app/onboarding/actions.ts"
+        }
+      },
+      "exportedName": "initialOnboardingState",
+      "filename": "apps/web/src/app/onboarding/actions.ts"
+    },
+    "60859d0be49916a718c086a11823be23d3372531bb": {
+      "workers": {
+        "app/onboarding/page": {
+          "moduleId": 8150,
+          "async": false,
+          "exportedName": "submitOnboarding",
+          "filename": "apps/web/src/app/onboarding/actions.ts"
+        }
+      },
+      "exportedName": "submitOnboarding",
+      "filename": "apps/web/src/app/onboarding/actions.ts"
+    }
+  },
+  "edge": {}
+}
