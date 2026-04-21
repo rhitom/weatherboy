@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { GeocodedCity, TemperaturePreference, WeatherDataPoint } from "@weatherboy/shared";
+import type { GeocodedCity, OnboardingSubmission, TemperaturePreference, WeatherDataPoint } from "@weatherboy/shared";
 import CitySearch from "@/components/ui/CitySearch";
 
 const dataPointOptions: { id: WeatherDataPoint; label: string; detail: string }[] = [
@@ -30,8 +30,59 @@ export default function OnboardingFlow() {
   const [unitsWind, setUnitsWind] = useState<"mph" | "kmh">("mph");
   const [astrologyEnabled, setAstrologyEnabled] = useState(false);
   const [birthday, setBirthday] = useState("");
+  const [isPending, setIsPending] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState<"error" | "success" | "idle">("idle");
 
   const canContinue = Boolean(homeCity) && selectedDataPoints.length > 0 && (!astrologyEnabled || birthday.length > 0);
+
+  async function handleContinue() {
+    if (!canContinue || isPending) {
+      return;
+    }
+
+    const payload: OnboardingSubmission = {
+      homeCity,
+      favoriteCities,
+      runsHotOrCold,
+      selectedDataPoints,
+      unitsTemp,
+      unitsWind,
+      astrologyEnabled,
+      birthday: astrologyEnabled && birthday ? birthday : null,
+    };
+
+    setIsPending(true);
+    setMessage("");
+    setMessageType("idle");
+
+    try {
+      const response = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = (await response.json()) as { ok: boolean; message: string };
+
+      if (!response.ok || !result.ok) {
+        setMessage(result.message || "Something went wrong while saving onboarding.");
+        setMessageType("error");
+        return;
+      }
+
+      setMessage(result.message || "Onboarding saved.");
+      setMessageType("success");
+      router.push("/dashboard");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Something went wrong while saving onboarding.");
+      setMessageType("error");
+    } finally {
+      setIsPending(false);
+    }
+  }
 
   return (
     <div className="glass-card space-y-6 p-6 md:p-8">
@@ -201,20 +252,20 @@ export default function OnboardingFlow() {
         </div>
       </div>
 
-      <div className="rounded-[1.25rem] border border-white/80 bg-white/35 p-4">
-        <p className="text-sm lowercase text-muted">
-          onboarding save is temporarily bypassed so you can continue into the dashboard while the server action path is being stabilized.
+      {message ? (
+        <p className={`text-sm lowercase ${messageType === "error" ? "text-rose-700" : "text-emerald-700"}`}>
+          {message}
         </p>
-      </div>
+      ) : null}
 
       <div className="flex justify-end">
         <button
           className="rounded-full bg-white/90 px-5 py-3 text-sm lowercase shadow-sm transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-          disabled={!canContinue}
+          disabled={!canContinue || isPending}
           type="button"
-          onClick={() => router.push("/dashboard")}
+          onClick={handleContinue}
         >
-          continue to dashboard
+          {isPending ? "saving..." : "continue to dashboard"}
         </button>
       </div>
     </div>

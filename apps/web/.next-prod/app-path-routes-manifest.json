@@ -2,6 +2,7 @@
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
   "/api/geocode/route": "/api/geocode",
+  "/api/onboarding/route": "/api/onboarding",
   "/dashboard/page": "/dashboard",
   "/favicon.ico/route": "/favicon.ico",
   "/icon/route": "/icon",
